@@ -4,7 +4,8 @@
 		'#webgl-speed-video',
 		'#webgl-weather',
 		'#practise-example-app-demo',
-		'#practise-example-population'
+		'#practise-example-population',
+		'#svg-morphing'
 	];
 
 	slides.forEach(slide => {

@@ -93,7 +93,7 @@
                 <span class="yandex-letter">З</span>авьялов
                 <span class="yandex-letter">А</span>лександр
             </p>
-            <p>Разработчик интерфейсов</p>
+            <p>Руководитель группы разработки КЛ</p>
         </div>
     </div>
 </section>
@@ -112,6 +112,7 @@
 <section class="slide section" id="css">
     <div>
         <h2>CSS</h2>
+        Добавить примеры с шейпами и заголовками/горами
     </div>
 </section>
 
@@ -1284,8 +1285,19 @@
         <h2>SVG</h2>
         <ul>
             <li><a href="http://yoksel.github.io/about-svg/" target="_blank">Позвольте представить: SVG</a></li>
-            <li><a href="https://yandex.ru/design/stasaki" target="_blank">Морфинг фигур на дизайн проекте ya.ru</a></li>
+            <li><a href="https://ya.ru/stasaki-original/" target="_blank">Морфинг фигур на дизайн проекте ya.ru</a></li>
         </ul>
+    </div>
+</section>
+
+<section class="slide cover" id="svg-morphing">
+    <style>
+        #svg-morphing video {
+            height: 100%;
+        }
+    </style>
+    <div>
+        <video src="pictures/yaru.mp4" pip="false" loop></video>
     </div>
 </section>
 
@@ -1695,16 +1707,17 @@
         <h2>WebGL: шейдер для grayscale</h2>
         <pre>
 			<code>&lt;script type="x-shader/x-fragment"></code>
-			<code>  varying highp vec2 coord;</code>
+			<code>  precision mediump float;</code>
+			<code>  varying vec2 coord;</code>
 			<code>  uniform sampler2D image;</code>
 			<code>  </code>
 			<code>  void main(void) {</code>
-			<code>    vec4 с = texture2D(image, coord);</code>
-			<code>    float grayScale = (c.r + c.g + c.b) / 3.0;</code>
-			<code>    gl_FragColor = vec4(grayScale, grayScale, grayScale, 1.0);</code>
+			<code>    vec4 color = texture2D(image, coord);</code>
+			<code>    color.rgb = vec3(color.r + color.g + color.b) / 3.0;</code>
+			<code>    gl_FragColor = color;</code>
 			<code>  }</code>
 			<code>&lt;/script></code>
-		</pre>
+	</pre>
         <h3><a href="https://webglfundamentals.org/webgl/lessons/webgl-image-processing.html" target="_blank">WebGL Fundamentals</a></h3>
     </div>
 </section>
@@ -1726,23 +1739,23 @@
 
 function main() {
   var image = new Image();
-  image.src = "cat.jpg";
+  image.src = "https://webglfundamentals.org/webgl/resources/leaves.jpg";
   image.onload = function() {
     render(image);
-  }
+  };
 }
 
 function render(image) {
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
-  var canvas = document.getElementById("canvas");
+  var canvas = document.querySelector("#canvas");
   var gl = canvas.getContext("webgl");
   if (!gl) {
     return;
   }
 
   // setup GLSL program
-  var program = webglUtils.createProgramFromScripts(gl, ["2d-vertex-shader", "2d-fragment-shader"]);
+  var program = webglUtils.createProgramFromScripts(gl, ["vertex-shader-2d", "fragment-shader-2d"]);
 
   // look up where the vertex data needs to go.
   var positionLocation = gl.getAttribLocation(program, "a_position");
@@ -1783,7 +1796,6 @@ function render(image) {
 
   // lookup uniforms
   var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
-  var textureSizeLocation = gl.getUniformLocation(program, "u_textureSize");
 
   webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
@@ -1810,7 +1822,7 @@ function render(image) {
   var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
   var offset = 0;        // start at the beginning of the buffer
   gl.vertexAttribPointer(
-      positionLocation, size, type, normalize, stride, offset)
+      positionLocation, size, type, normalize, stride, offset);
 
   // Turn on the teccord attribute
   gl.enableVertexAttribArray(texcoordLocation);
@@ -1825,13 +1837,10 @@ function render(image) {
   var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
   var offset = 0;        // start at the beginning of the buffer
   gl.vertexAttribPointer(
-      texcoordLocation, size, type, normalize, stride, offset)
+      texcoordLocation, size, type, normalize, stride, offset);
 
   // set the resolution
   gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
-
-  // set the size of the image
-  gl.uniform2f(textureSizeLocation, image.width, image.height);
 
   // Draw the rectangle.
   var primitiveType = gl.TRIANGLES;
@@ -1930,6 +1939,51 @@ main();
         <h2>Визуализация плотности населения</h2>
         <video src="pictures/population.mp4" pip="false" loop></video>
         <p class="next">SVG</p>
+    </div>
+</section>
+
+<section class="slide" id="practise-example-rollover">
+    <style>
+        #practise-example-rollover .rollover {
+            width: 800px;
+            height: 600px;
+            position: relative;
+            border: 8px solid #eee;
+            cursor: pointer;
+            margin: auto;
+        }
+
+        #practise-example-rollover .rollover div {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+        }
+
+        #practise-example-rollover .rollover_1 {
+            background: url('pictures/bi2-2.jpg') 0 0 no-repeat;
+        }
+
+        #practise-example-rollover .rollover_2 {
+            background: url('pictures/bi2.jpg') 0 0 no-repeat;
+            -webkit-transition: -webkit-mask-position 2s ease;
+            -webkit-mask-size: 290%;
+            -webkit-mask-image: -webkit-gradient(linear, left top, right top, color-stop(0.00, rgba(0,0,0,1)), color-stop(0.35, rgba(0,0,0,1)), color-stop(0.50, rgba(0,0,0,0)), color-stop(0.75, rgba(0,0,0,0)), color-stop(1.00, rgba(0,0,0,0)));
+        }
+
+        #practise-example-rollover .rollover_2:hover {
+            -webkit-mask-position: 90% -300px;
+        }
+    </style>
+    <div class="center">
+        <h2>Эффект смены при наведении</h2>
+        <div class="rollover">
+            <div class="rollover_1"></div>
+            <div class="rollover_2"></div>
+        </div>
+        <p class="next">CSS Masks + CSS Transitions</p>
     </div>
 </section>
 
